@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import API from '../../middleware';
 import './styles.scss';
-
+import arrow from '../../images/arrow-back-outline.svg';
+import searchIcon from '../../images/search-outline.svg';
 function App() {
 
   const [countriesToSearch, setCountriesToSearch] = useState("region/africa");
@@ -18,6 +19,11 @@ function App() {
     setSpecificCountry(false);
   };
 
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    getCountries(`name/${countryToSearch}`, false);
+  };
+
   const getCountries = (countries, multiple) => {
     const config = {
       method:'get',
@@ -26,12 +32,11 @@ function App() {
     API(config)
     .then((response) => {
       if (response.status === 200) {
+        console.log(response.data);
         if (multiple) {
           setCountriesFound(response.data);
         } else {
           setCountryFound(response.data);
-          console.log(response.data);
-          console.log(countryFound);
           setSpecificCountry(true);
         }
       };
@@ -72,7 +77,9 @@ function App() {
         {!specificCountry && 
         <>
           <div className="body-container-top">
-            <input type="text" className="search-input" placeholder="Search for a country..." />
+            <form action="" onSubmit={(e) => onSubmitHandler(e)}>
+              <input type="text" className="search-input" placeholder="Search for a country..." onChange={(e) => setCountryToSearch(e.target.value)}/>
+            </form>
             <select name="regions" id="region" className="search-regions" onChange={(e) => setCountriesToSearch(`region/${e.target.value}`)}>
               <option value="africa">Africa</option>
               <option value="america">America</option>
@@ -86,25 +93,37 @@ function App() {
           </div>
         </>}
         {specificCountry && countryFound &&
+        <>
+          <button className="back-button" onClick={backButtonHandler}>
+            <img src={arrow} alt="" />
+            Back</button>
           <div className="specific-country">
           <div className="specific-country-left">
-            <button className="back-button" onClick={backButtonHandler}>Back</button>
             <img src={countryFound[0].flags.svg} alt="Country flag" />
           </div>
           <div className="specific-country-details">
             <h2 className="specific-country-name">{countryFound[0].name.common}</h2>
-            <ul>
-              <li>Native Name: {Object.values(Object.values(countryFound[0].name.nativeName)[0])[0]}</li>
-              <li>Population: {countryFound[0].population}</li>
-              <li>Region: {countryFound[0].population}</li>
-              <li>Sub Region: {countryFound[0].subregion}</li>
-              <li>Capital: {countryFound[0].capital[0]}</li>
-              <li>Top Level Domain: {countryFound[0].tld[0]}</li>
-              <li>Currencies: {Object.values(Object.values(countryFound[0].currencies)[0])[0]}</li>
-              <li>Languages: {Object.values(Object.values(countryFound[0].languages)[0])}</li>
-            </ul>
+            <div className="details">
+              <div className="details-list">
+                <ul>
+                  <li><span className="semi-bold">Native Name:</span> {Object.values(Object.values(countryFound[0].name.nativeName)[0])[0]}</li>
+                  <li><span className="semi-bold">Population:</span> {countryFound[0].population}</li>
+                  <li><span className="semi-bold">Region:</span> {countryFound[0].population}</li>
+                  <li><span className="semi-bold">Sub Region:</span> {countryFound[0].subregion}</li>
+                  <li><span className="semi-bold">Capital:</span> {countryFound[0].capital[0]}</li>
+                </ul>
+              </div>
+              <div className="details-list">
+                <ul>
+                  <li><span className="semi-bold">Top Level Domain:</span> {countryFound[0].tld[0]}</li>
+                  <li><span className="semi-bold">Currencies:</span> {Object.values(Object.values(countryFound[0].currencies)[0])[0]}</li>
+                  <li><span className="semi-bold">Languages:</span> {Object.values(Object.values(countryFound[0].languages).map((lang) => lang + ", "))}</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
+        </>
         }
       </main>
     </div>
