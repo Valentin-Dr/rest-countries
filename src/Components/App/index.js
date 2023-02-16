@@ -7,27 +7,43 @@ function App() {
   const [countriesToSearch, setCountriesToSearch] = useState("region/africa");
   const [countriesFound, setCountriesFound] = useState([]);
   const [specificCountry, setSpecificCountry] = useState(false);
-  // name/{name}
-  const getCountries = () => {
+  const [countryToSearch, setCountryToSearch] = useState("");
+  const [countryFound, setCountryFound] = useState([]);
+
+  const countryOnClickHandler = (e) => {
+    getCountries(`name/${e.querySelector(".country-name").innerText}`, false);
+  };
+
+  const backButtonHandler = () => {
+    setSpecificCountry(false);
+  };
+
+  const getCountries = (countries, multiple) => {
     const config = {
       method:'get',
-      url:countriesToSearch
+      url:countries
     };
     API(config)
     .then((response) => {
-      console.log(response.data);
       if (response.status === 200) {
-        setCountriesFound(response.data);
+        if (multiple) {
+          setCountriesFound(response.data);
+        } else {
+          setCountryFound(response.data);
+          console.log(response.data);
+          console.log(countryFound);
+          setSpecificCountry(true);
+        }
       };
     });
   };
 
   useEffect(() => {
-    getCountries();
+    getCountries(countriesToSearch, true);
   }, [countriesToSearch]);
 
   const countriesJsx = countriesFound.map((country) => 
-    <div className="country-container" key={country.fifa}>
+    <div className="country-container" key={country.fifa} onClick={(e) => countryOnClickHandler(e.currentTarget)}>
       <img className="country-flag" src={country.flags.svg} alt="Country flag" />
       <div className="country-container-bottom">
         <p className="country-name">
@@ -40,7 +56,7 @@ function App() {
         </ul>
       </div>
     </div>
-  )
+  );
 
   return (
     <div className="App">
@@ -53,20 +69,43 @@ function App() {
         </div>
       </header>
       <main>
-        <div className="body-container-top">
-          <input type="text" className="search-input" placeholder="Search for a country..." />
-          <select name="regions" id="region" className="search-regions" onChange={(e) => setCountriesToSearch(`region/${e.target.value}`)}>
-            <option value="africa">Africa</option>
-            <option value="america">America</option>
-            <option value="asia">Asia</option>
-            <option value="europe">Europe</option>
-            <option value="oceania">Oceania</option>
-          </select>
+        {!specificCountry && 
+        <>
+          <div className="body-container-top">
+            <input type="text" className="search-input" placeholder="Search for a country..." />
+            <select name="regions" id="region" className="search-regions" onChange={(e) => setCountriesToSearch(`region/${e.target.value}`)}>
+              <option value="africa">Africa</option>
+              <option value="america">America</option>
+              <option value="asia">Asia</option>
+              <option value="europe">Europe</option>
+              <option value="oceania">Oceania</option>
+            </select>
+          </div>
+          <div className="body-container-countries">
+            {countriesJsx}
+          </div>
+        </>}
+        {specificCountry && countryFound &&
+          <div className="specific-country">
+          <div className="specific-country-left">
+            <button className="back-button" onClick={backButtonHandler}>Back</button>
+            <img src={countryFound[0].flags.svg} alt="Country flag" />
+          </div>
+          <div className="specific-country-details">
+            <h2 className="specific-country-name">{countryFound[0].name.common}</h2>
+            <ul>
+              <li>Native Name: {Object.values(Object.values(countryFound[0].name.nativeName)[0])[0]}</li>
+              <li>Population: {countryFound[0].population}</li>
+              <li>Region: {countryFound[0].population}</li>
+              <li>Sub Region: {countryFound[0].subregion}</li>
+              <li>Capital: {countryFound[0].capital[0]}</li>
+              <li>Top Level Domain: {countryFound[0].tld[0]}</li>
+              <li>Currencies: {Object.values(Object.values(countryFound[0].currencies)[0])[0]}</li>
+              <li>Languages: {Object.values(Object.values(countryFound[0].languages)[0])}</li>
+            </ul>
+          </div>
         </div>
-        {!specificCountry &&
-        <div className="body-container-countries">
-          {countriesJsx}
-        </div>}
+        }
       </main>
     </div>
   );

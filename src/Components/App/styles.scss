@@ -88,3 +88,15 @@ body {
 .semi-bold {
   font-weight: 600;
 }
+
+.specific-country {
+  padding: 80px;
+  display: flex;
+  justify-content: space-between;
+  &-left {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    gap: 60px;
+  }
+}
