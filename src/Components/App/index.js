@@ -48,7 +48,6 @@ function App() {
     API(config)
     .then((response) => {
       if (response.status === 200) {
-        console.log(response.data);
         if (multiple) {
           setCountriesFound(response.data);
         } else {
@@ -125,7 +124,7 @@ function App() {
                 <ul>
                   <li><span className="semi-bold">Native Name:</span> {Object.values(Object.values(countryFound[0].name.nativeName)[0])[0]}</li>
                   <li><span className="semi-bold">Population:</span> {countryFound[0].population}</li>
-                  <li><span className="semi-bold">Region:</span> {countryFound[0].population}</li>
+                  <li><span className="semi-bold">Region:</span> {countryFound[0].region}</li>
                   <li><span className="semi-bold">Sub Region:</span> {countryFound[0].subregion}</li>
                   <li><span className="semi-bold">Capital:</span> {countryFound[0].capital ? countryFound[0].capital[0] : "None found"}</li>
                 </ul>
@@ -134,14 +133,16 @@ function App() {
                 <ul>
                   <li><span className="semi-bold">Top Level Domain:</span> {countryFound[0].tld[0]}</li>
                   <li><span className="semi-bold">Currencies:</span> {Object.values(Object.values(countryFound[0].currencies)[0])[0]}</li>
-                  <li><span className="semi-bold">Languages:</span> {Object.values(Object.values(countryFound[0].languages).map((lang) => lang + ", ")).join("").slice(0,-2)}</li>
+                  <li><span className="semi-bold">Languages:</span> {Object.values(Object.values(countryFound[0].languages).map((lang) => (lang + ", "))).join("").slice(0,-2)}</li>
                 </ul>
               </div>
             </div>
             <div className="details-borders">
               <ul>
                 <li className="semi-bold">Border Countries:</li>
-                {Object.values(Object.values(countryFound[0].borders).map((country) => <li className="details-borders-country" onClick={(e) => borderCountryOnClickHandler(e.currentTarget)}>{country}</li>))}
+                {countryFound[0].borders ? Object.values(Object.values(countryFound[0].borders).map((country) =>
+                <li className="details-borders-country" onClick={(e) => borderCountryOnClickHandler(e.currentTarget)}>{country}</li>
+                )) : "None found"}
               </ul>
             </div>
           </div>
