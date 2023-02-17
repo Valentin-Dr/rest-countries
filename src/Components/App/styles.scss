@@ -1,10 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;600;800&display=swap');
 
+:root {
+  --primary-color: hsl(0, 0%, 98%);
+  --secondary-color: hsl(0, 0%, 100%);
+  --text-color: hsl(200, 15%, 8%);
+  --box-shadow-color: hsl(0, 0%, 52%);
+  --icon-filter: invert(0%);
+}
+
+$primary-color: var(--primary-color);
+$secondary-color: var(--secondary-color);
+$text-color: var(--text-color);
+$box-shadow-color: var(--box-shadow-color);
+$icon-filter: var(--icon-filter);
+// $secondary-color: hsl();
+
 * {
   margin: 0;
   padding: 0;
   font-family: 'Nunito Sans', sans-serif;
   list-style: none;
+  color: $text-color;
 }
 
 .App {
@@ -14,12 +30,27 @@
 }
 
 .header {
+  // color: hsl(0, 0%, 52%);
+  // color: hsl(0, 0%, 77%);
+  // color: hsl(0, 0%, 98%);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px 80px;
-  background-color: white;
-  box-shadow: 0 0 4px hsl(0, 0%, 52%);
+  background-color: $secondary-color;
+  box-shadow: 0 0 4px $box-shadow-color;
+  &-dark-mode {
+    font-weight: 600;
+    display: flex;
+    & img {
+      padding-right: 12px;
+      width: 16px;
+      filter: $icon-filter;
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
 
 .body-container {
@@ -44,11 +75,11 @@
     padding: 15px 50px;
     width: 30rem;
     border-radius: 5px;
-    box-shadow: 0 0 3px hsl(0, 0%, 52%);
+    box-shadow: 0 0 3px $box-shadow-color;
     position: relative;
     background: url('../../images/search-outline.svg') no-repeat 17px 13px;
     background-size: 1.3rem;
-    background-color: white;
+    background-color: $secondary-color;
     &::placeholder {
       color: hsl(0, 0%, 52%);
       font-weight: 800;
@@ -57,14 +88,14 @@
   &-regions {
     padding: 10px 30px;
     border-radius: 5px;
-    background-color: white;
+    background-color: $secondary-color;
     border: none;
-    box-shadow: 0 0 3px hsl(0, 0%, 52%);
+    box-shadow: 0 0 3px $box-shadow-color;
   }
 }
 
 body {
-  background-color: hsl(0, 0%, 98%);
+  background-color: $primary-color;
 }
 
 .country {
@@ -72,8 +103,8 @@ body {
     font-size: 14px;
     width: 20rem;
     height: 30rem;
-    background-color: white;
-    box-shadow: 0 0 5px hsl(0, 0%, 77%);
+    background-color: $secondary-color;
+    box-shadow: 0 0 5px $box-shadow-color;
     border-radius: 10px;
     &:hover {
       cursor: pointer;
@@ -107,14 +138,15 @@ body {
   justify-content: center;
   margin: 80px;
   padding: 10px 40px;
-  background-color: white;
+  background-color: $secondary-color;
   border-radius: 5px;
   border: none;
-  box-shadow: 0px 0px 4px hsl(0, 0%, 52%);
+  box-shadow: 0px 0px 4px $box-shadow-color;
   & img {
     padding-right: 10px;
     width: 20px;
     height: 20px;
+    filter: $icon-filter;
   }
   &:hover {
     cursor: pointer;
@@ -124,7 +156,24 @@ body {
 .details {
   display: flex;
   gap: 80px;
-  justify-content: space-between;
+  justify-content: left;
+  &-borders {
+    padding-top: 50px;
+    display: flex;
+    & li {
+      display: inline;
+      &:nth-child(n+2) {
+        padding: 0 8px;
+        margin: 0 4px;
+      }
+    }
+    &-country {
+      box-shadow: 0 0 6px $box-shadow-color;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
 }
 
 .specific-country {
@@ -147,5 +196,52 @@ body {
   }
   & .details-list {
     line-height: 33px;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .header {
+    padding: 20px 40px;
+  }
+  .search {
+    &-form {
+      width: calc(100% - 100px);
+    }
+    &-input {
+      width: 100%;
+    }
+  }
+
+  .body-container-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+  }
+
+  .specific-country {
+    flex-direction: column;
+    padding: 0 40px 80px 40px;
+    &-left {
+      width: 100%;
+    }
+  }
+
+  .back-button {
+    margin: 40px 0 80px 40px;
+  }
+
+  .details {
+    flex-direction: column;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .header {
+    &-title {
+      font-size: 18px;
+    }
+    &-dark-mode {
+      font-size: 14px;
+    }
   }
 }
