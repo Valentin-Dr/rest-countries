@@ -62,12 +62,8 @@ function App() {
     });
   };
 
-  useEffect(() => {
-    getCountries(countriesToSearch, true);
-  }, [countriesToSearch]);
-
   const countriesJsx = countriesFound.map((country) => 
-    <div className="country-container" key={uuidv4()} onClick={(e) => countryOnClickHandler(e.currentTarget)}>
+  <div className="country-container" key={uuidv4()} onClick={(e) => countryOnClickHandler(e.currentTarget)}>
       <img className="country-flag" src={country.flags.svg} alt="Country flag" />
       <div className="country-container-bottom">
         <p className="country-name">
@@ -81,6 +77,10 @@ function App() {
       </div>
     </div>
   );
+
+  useEffect(() => {
+    getCountries(countriesToSearch, true);
+  }, [countriesToSearch]);
 
   return (
     <div className="App">
