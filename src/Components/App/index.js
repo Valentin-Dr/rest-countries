@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import API from '../../middleware';
 import './styles.scss';
 import arrow from '../../images/arrow-back-outline.svg';
 import lightModeIcon from '../../images/LightMode.svg';
 import darkModeIcon from '../../images/DarkMode.svg';
 function App() {
-
+  
+  
   const [countriesToSearch, setCountriesToSearch] = useState("region/africa");
   const [countriesFound, setCountriesFound] = useState([]);
   const [specificCountry, setSpecificCountry] = useState(false);
   const [countryToSearch, setCountryToSearch] = useState("");
   const [countryFound, setCountryFound] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
+  const [darkModeText, setDarkModeText] = useState("Dark Mode");
 
   const countryOnClickHandler = (e) => {
     getCountries(`name/${e.querySelector(".country-name").innerText}`, false);
@@ -32,6 +35,7 @@ function App() {
 
   const darkModeHandler = () => {
     setDarkMode(!darkMode);
+    setDarkModeText(!darkMode ? "Light Mode" : "Dark Mode");
     const root = document.documentElement;
     root.style.setProperty("--primary-color", !darkMode ? "hsl(207, 26%, 17%)" : "hsl(0, 0%, 98%)");
     root.style.setProperty("--secondary-color", !darkMode ? "hsl(209, 23%, 22%)" : "hsl(0, 0%, 100%)");
@@ -63,7 +67,7 @@ function App() {
   }, [countriesToSearch]);
 
   const countriesJsx = countriesFound.map((country) => 
-    <div className="country-container" key={country.fifa} onClick={(e) => countryOnClickHandler(e.currentTarget)}>
+    <div className="country-container" key={uuidv4()} onClick={(e) => countryOnClickHandler(e.currentTarget)}>
       <img className="country-flag" src={country.flags.svg} alt="Country flag" />
       <div className="country-container-bottom">
         <p className="country-name">
@@ -85,7 +89,7 @@ function App() {
         <div className="header-dark-mode" onClick={darkModeHandler}>
           <img src={darkMode ? lightModeIcon : darkModeIcon} alt="" />
           <p className="header-dark-mode-p">
-            Dark Mode
+            {darkModeText}
           </p>
         </div>
       </header>
